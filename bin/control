@@ -52,6 +52,7 @@ function reload() {
 }
 
 function status() {
+  client_result "TODO"
 }
 
 
