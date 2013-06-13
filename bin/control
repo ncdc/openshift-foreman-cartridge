@@ -1,0 +1,65 @@
+#!/bin/bash -e
+
+source $OPENSHIFT_CARTRIDGE_SDK_BASH
+
+FOREMAN_PID_FILE=${OPENSHIFT_FOREMAN_DIR}/run/foreman.pid
+
+function isrunning() {
+  if [ -f "$FOREMAN_PID_FILE" ]; then
+    pid=$(cat $FOREMAN_PID_FILE);
+    if /bin/ps --pid $pid 1>&2 >/dev/null; then
+      return 0
+    fi
+  fi
+
+  return 1
+}
+
+function start() {
+  client_result "Starting Foreman cartridge"
+  
+  if isrunning; then
+    echo "Foreman is already running"
+  else    
+    bundle exec foreman start > ${OPENSHIFT_TMP_DIR}/${cartridge_type}.log 2>&1 &
+    pid=$!
+    echo "$pid" > $FOREMAN_PID_FILE
+  fi
+}
+
+function stop() {
+  client_result "Stopping Foreman cartridge"
+  if isrunning; then
+    if [ -f "$FOREMAN_PID_FILE" ]; then
+      pid=$(cat $FOREMAN_PID_FILE);
+      client_result "Sending SIGTERM to foreman:$pid ..."
+      kill -TERM $pid
+    else
+      client_result "Failed to locate Foreman pid file"
+    fi
+  fi
+}
+
+function restart() {
+  client_result "Restarting Foreman cartridge"
+  stop
+  start
+}
+
+function reload() {
+  client_result "Reloading Foreman cartridge"
+  restart
+}
+
+function status() {
+}
+
+
+case "$1" in
+  start) start ;;
+  stop)  stop ;;
+  restart) restart ;;
+  reload) reload ;;
+  status) status ;;
+  *) exit 0
+esac
