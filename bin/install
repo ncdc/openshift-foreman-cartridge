@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 pushd $OPENSHIFT_FOREMAN_DIR > /dev/null
-bundle install
+bundle install --deployment
 popd > /dev/null
 
 mkdir -p $OPENSHIFT_FOREMAN_RUN_DIR $OPENSHIFT_FOREMAN_LOG_DIR
