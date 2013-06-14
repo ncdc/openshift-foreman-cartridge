@@ -2,4 +2,4 @@
 
 bundle install --gemfile=$OPENSHIFT_FOREMAN_DIR/Gemfile
 
-mkdir -p $OPENSHIFT_FOREMAN_DIR/run
+mkdir -p $OPENSHIFT_FOREMAN_RUN_DIR $OPENSHIFT_FOREMAN_LOG_DIR

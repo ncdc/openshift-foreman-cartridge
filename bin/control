@@ -2,7 +2,7 @@
 
 source $OPENSHIFT_CARTRIDGE_SDK_BASH
 
-FOREMAN_PID_FILE=${OPENSHIFT_FOREMAN_DIR}/run/foreman.pid
+FOREMAN_PID_FILE=${OPENSHIFT_FOREMAN_RUN_DIR}/foreman.pid
 
 function isrunning() {
   if [ -f "$FOREMAN_PID_FILE" ]; then
@@ -19,11 +19,15 @@ function start() {
   client_result "Starting Foreman cartridge"
   
   if isrunning; then
-    echo "Foreman is already running"
-  else    
-    bundle exec foreman start > ${OPENSHIFT_TMP_DIR}/${cartridge_type}.log 2>&1 &
+    client_error "Foreman is already running"
+  elif [ ! -f $OPENSHIFT_REPO_DIR/Procfile ]; then
+    client_error "Procfile not found"
+  else
+    pushd ${OPENSHIFT_FOREMAN_DIR} > /dev/null
+    bundle exec foreman start > ${OPENSHIFT_FOREMAN_LOG_DIR/foreman.log 2>&1 &
     pid=$!
     echo "$pid" > $FOREMAN_PID_FILE
+    popd > /dev/null
   fi
 }
 
