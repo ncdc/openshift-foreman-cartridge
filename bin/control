@@ -24,7 +24,7 @@ function start() {
     client_result "Procfile not found"
   else
     pushd ${OPENSHIFT_FOREMAN_DIR} > /dev/null
-    bundle exec foreman start --root=$OPENSHIFT_REPO_DIR > $OPENSHIFT_FOREMAN_LOG_DIR/foreman.log 2>&1 &
+    bundle exec "foreman start --root=$OPENSHIFT_REPO_DIR" > $OPENSHIFT_FOREMAN_LOG_DIR/foreman.log 2>&1 &
     pid=$!
     echo "$pid" > $FOREMAN_PID_FILE
     popd > /dev/null
