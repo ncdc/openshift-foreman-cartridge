@@ -17,13 +17,13 @@ function isrunning() {
 
 function start() {
   client_result "Starting Foreman cartridge"
-  
+
   if isrunning; then
     client_result "Foreman is already running"
   elif [ ! -f $OPENSHIFT_REPO_DIR/Procfile ]; then
     client_result "Procfile not found"
   else
-    pushd ${OPENSHIFT_FOREMAN_DIR} > /dev/null
+    pushd $OPENSHIFT_FOREMAN_DIR > /dev/null
     env > $OPENSHIFT_FOREMAN_DIR/foreman.env
     bundle exec "foreman start --root=$OPENSHIFT_REPO_DIR --env=$OPENSHIFT_FOREMAN_DIR/foreman.env" > $OPENSHIFT_FOREMAN_LOG_DIR/foreman.log 2>&1 &
     pid=$!
@@ -57,7 +57,11 @@ function reload() {
 }
 
 function status() {
-  client_result "TODO"
+  if isrunning; then
+     client_result "Foreman is running"
+  else
+     client_result "Foreman is stopped"
+  fi
 }
 
 
