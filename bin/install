@@ -1,7 +1,14 @@
 #!/bin/bash -e
 
+RUBY_BIN_DIR=`dirname $(scl enable ruby193 "which ruby")`
+
+echo $RUBY_BIN_DIR > $OPENSHIFT_FOREMAN_DIR/env/OPENSHIFT_FOREMAN_PATH_ELEMENT
+
+ld_path=$(LD_LIBRARY_PATH="" scl enable ruby193 "printenv LD_LIBRARY_PATH")
+path_append $LD_LIBRARY_PATH $ld_path > $OPENSHIFT_FOREMAN_DIR/env/LD_LIBRARY_PATH
+
 pushd $OPENSHIFT_FOREMAN_DIR > /dev/null
-scl enable ruby193 "bundle install --deployment"
+scl enable ruby193 "bundle install"
 popd > /dev/null
 
 mkdir -p $OPENSHIFT_FOREMAN_RUN_DIR $OPENSHIFT_FOREMAN_LOG_DIR
