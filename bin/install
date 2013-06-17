@@ -4,11 +4,14 @@ source $OPENSHIFT_CARTRIDGE_SDK_BASH
 
 RUBY_BIN_DIR=`dirname $(scl enable ruby193 "which ruby")`
 
-echo $RUBY_BIN_DIR > $OPENSHIFT_FOREMAN_DIR/env/OPENSHIFT_FOREMAN_PATH_ELEMENT
+echo $RUBY_BIN_DIR:$OPENSHIFT_HOMEDIR/bin > $OPENSHIFT_FOREMAN_DIR/env/OPENSHIFT_FOREMAN_PATH_ELEMENT
 
 ld_path=$(LD_LIBRARY_PATH="" scl enable ruby193 "printenv LD_LIBRARY_PATH")
 path_append $LD_LIBRARY_PATH $ld_path > $OPENSHIFT_FOREMAN_DIR/env/LD_LIBRARY_PATH
 
+# because this is running during cartridge installation, it currently has
+# permissions to create ~/.gem, so the gems are installed there, and
+# the binstubs are installed in ~/bin
 pushd $OPENSHIFT_FOREMAN_DIR > /dev/null
 scl enable ruby193 "bundle install"
 popd > /dev/null
