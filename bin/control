@@ -37,7 +37,7 @@ function stop() {
     if [ -f "$FOREMAN_PID_FILE" ]; then
       pid=$(cat $FOREMAN_PID_FILE);
       client_result "Sending SIGTERM to foreman:$pid ..."
-      kill -TERM $pid
+      kill -TERM $pid > /dev/null 2>&1
     else
       client_result "Failed to locate Foreman pid file"
     fi
